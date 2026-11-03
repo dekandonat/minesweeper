@@ -90,6 +90,7 @@ void calculateAdjacentCounts(Field **grid, int n)
 
 void printGrid(Field **grid, int n)
 {
+    printf("\033[H\033[J");
     for (int r = 0; r < n; r++)
     {
         for (int c = 0; c < n; c++)

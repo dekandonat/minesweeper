@@ -19,7 +19,7 @@ int main()
 
     placeMines(grid, n, n * n * 15 / 100);
     calculateAdjacentCounts(grid, n);
-    printGrid(grid, n);
+    startGame(grid, n);
     freeGrid(grid, n);
     return 0;
 }
