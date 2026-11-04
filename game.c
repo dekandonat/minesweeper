@@ -47,6 +47,10 @@ int checkForGameEnd(Field **grid, int n)
     return 1;
 }
 
+void getRidOfZeroes(Field **grid, int n, int r, int c)
+{
+}
+
 void startGame(Field **grid, int n)
 {
     int isAlive = 1;
@@ -60,11 +64,15 @@ void startGame(Field **grid, int n)
 
         if (action == 'F')
         {
-            grid[r][c].flagged = 1;
+            grid[r][c].flagged == 0 ? 1 : 0;
         }
         else if (!grid[r][c].mine && action == 'R')
         {
             grid[r][c].revealed = 1;
+        }
+        else if (grid[r][c].flagged && action == 'R')
+        {
+            printf("This field is flagged!");
         }
         else
         {
