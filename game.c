@@ -49,6 +49,24 @@ int checkForGameEnd(Field **grid, int n)
 
 void getRidOfZeroes(Field **grid, int n, int r, int c)
 {
+    for (int r = -1; r <= 1; r++)
+    {
+        for (int c = -1; c <= 1; c++)
+        {
+            if (r == 0 && c == 0)
+                continue;
+
+            if (!grid[r][c].revealed)
+            {
+                grid[r][c].revealed = 1;
+            }
+
+            if (grid[r][c].adjacent == 0)
+            {
+                getRidOfZeroes(grid, n, r, c);
+            }
+        }
+    }
 }
 
 void startGame(Field **grid, int n)
@@ -69,6 +87,10 @@ void startGame(Field **grid, int n)
         else if (!grid[r][c].mine && action == 'R')
         {
             grid[r][c].revealed = 1;
+            if (grid[r][c].adjacent == 0)
+            {
+                getRidOfZeroes(grid, n, r, c);
+            }
         }
         else if (grid[r][c].flagged && action == 'R')
         {
