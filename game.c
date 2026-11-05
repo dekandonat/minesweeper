@@ -47,7 +47,7 @@ int checkForGameEnd(Field **grid, int n)
     return 1;
 }
 
-void getRidOfZeroes(Field **grid, int n, int r, int c)
+void getRidOfZeroes(Field **grid, int n, int row, int column)
 {
     for (int r = -1; r <= 1; r++)
     {
@@ -56,14 +56,31 @@ void getRidOfZeroes(Field **grid, int n, int r, int c)
             if (r == 0 && c == 0)
                 continue;
 
-            if (!grid[r][c].revealed)
-            {
-                grid[r][c].revealed = 1;
-            }
+            if (row + r < 0 || row + r >= n || column + c < 0 || column + c >= n)
+                continue;
 
-            if (grid[r][c].adjacent == 0)
+            if (!grid[row + r][column + c].revealed)
             {
-                getRidOfZeroes(grid, n, r, c);
+                grid[row + r][column + c].revealed = 1;
+                if (grid[row + r][column + c].adjacent == 0)
+                {
+
+                    getRidOfZeroes(grid, n, row + r, column + c);
+                }
+            }
+        }
+    }
+}
+
+void revealAllBombs(Field **grid, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (grid[i][j].mine && !grid[i][j].revealed)
+            {
+                grid[i][j].revealed = 1;
             }
         }
     }
@@ -82,7 +99,18 @@ void startGame(Field **grid, int n)
 
         if (action == 'F')
         {
-            grid[r][c].flagged == 0 ? 1 : 0;
+            if (grid[r][c].flagged == 0)
+            {
+                grid[r][c].flagged = 1;
+            }
+            else
+            {
+                grid[r][c].flagged = 0;
+            }
+        }
+        else if (grid[r][c].flagged && action == 'R')
+        {
+            printf("This field is flagged!");
         }
         else if (!grid[r][c].mine && action == 'R')
         {
@@ -92,14 +120,11 @@ void startGame(Field **grid, int n)
                 getRidOfZeroes(grid, n, r, c);
             }
         }
-        else if (grid[r][c].flagged && action == 'R')
-        {
-            printf("This field is flagged!");
-        }
         else
         {
             isAlive = 0;
             grid[r][c].revealed = 1;
+            revealAllBombs(grid, n);
             printGrid(grid, n);
             printf("You Lost!");
         }
